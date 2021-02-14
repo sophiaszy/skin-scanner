@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Medical Imaging</title>
+	<style>
+		body{
+		    padding:0;
+		    background-color:#F5F5DC;
+		}
+	</style>
+  </head>
+  <body>
+  	<!-- ,garamond,serif -->
+  	<div class="header">
+  		<h1 style = "font-family:georgia;font-size:45px;font-style:italic;text-align:center;">
+  			<strong>
+  				Skin Cancer Medical Imaging
+  			</strong>
+  		</h1>
+  	</div>
+  	<style>
+  		.header {
+		  padding: 30px;
+		  text-align: center;
+		  /*background: #1abc9c;*/
+		  /*maybe change to black cuz thats the official skin cancer color*/
+		  background: brown;
+		  color: white;
+		  font-size: 30px;
+		}
+  	</style>
+  	<br>
+    <p1 style = "font-family:georgia;font-size:17px;"> 
+    	<ul>
+	    	<li>
+	    		Did you know that 1 in 5 Americans will develop skin cancer by the age of 70? However, when detected early, the 5-year survival rate for melanoma, the most common form of skin cancer, is 99 percent! 
+	    	</li>
+			<li>
+				Just simply taking a snapshot of any suspicious skin leisons you notice and uploading it below can provide you with instant feedback from our well-trained model and will help streamline this early identification process. 
+			</li>	
+		</ul>
+	</p1>
+    <br><br><br>
+    <p2 style = "font-family:georgia;font-size:20px;">
+    	<center>
+    		<b>
+    			Please upload an image of your skin leison below:
+    		</b>
+    	</center>
+    </p2>
+    <br>
+    <br>
+<!-- 	<script>
+		//now formData contains our image 
+		const handleImageUpload = event => {
+		const files = event.target.files
+		const formData = new FormData()
+		formData.append('myFile', files[0])
+
+		fetch('/saveImage', {
+		method: 'POST',
+		body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+		console.log(data.path)
+		})
+		.catch(error => {
+		console.error(error)
+		})
+		}
+
+		document.querySelector('#fileUpload').addEventListener('change', event => {
+		handleImageUpload(event)})
+	</script> -->
+	<!-- send the data (image stored in formData to backend via post request) -->
+	<!-- fill in ___ with any name that backend also knows so that they can receive it with a get request-->
+	<form action="/uploadedimage" method="post" enctype='multipart/form-data'>
+		<center>
+			<div class="button" style="width:80px;height:50px;">
+		 		<input type="file" id="actual-btn" name="actual-btn"/>
+		 	</div>
+		</center>
+	</form>
+	<!-- now, we need to receive the data back from the server and output different things based off what value we got back -->
+	<script>
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+		       // Typical action to be performed when the document is ready:
+		       //document.getElementById("demo").innerHTML = xhttp.responseText;
+		       //if statements based off string returned 
+		       text = "";
+		       extra_info = "";
+		       //json.dumps() converts the json object to a python string
+		       cancer_type = "mel";//json.dumps(xhttp.responseText);
+		       if (cancer_type == "nv") {
+		       	text = "Melanocytic nevi";
+		       	extra_info = ;
+		       }else if (cancer_type == "mel") {
+		       	text = "Melanoma";
+		       	extra_info = ;
+		       }else if (cancer_type == "bkl") {
+		       	text = "Benign keratosis-like lesions";
+		       	extra_info = ;
+		       }else if (cancer_type == "bcc") {
+                text = "Basal cell carcinoma";
+                extra_info = ;
+		       }else if (cancer_type == "akiec") {
+                text = "Actinic keratoses";
+                extra_info = ;
+		       }else if (cancer_type == "vasc") {
+                text = "Vascular lesions";
+                extra_info = ;
+		       }else if (cancer_type == "df") {
+                text = "Dermatofibroma";
+                extra_info = ;
+		       } else {
+		       	text = "healthy";
+		       	extra_info = "You can continue to protect your skin and reduce your risk of getting skin cancer by continuing to limit your time under the sun and wearing sunscreen!";
+		       }
+		       //output which type you have and then create button that you can press for more info 
+		       if (text == "healthy") {
+		       	console.log("Our model predicts that your skin lesion is not indicative of cancer!");
+		       } else {
+		       	console.log("Our model predicts that your skin lesion is indicative of " + text + " cancer.");
+		       	//create button for more info 
+		       	//replace popup text with info on specific cancer
+		       // 	document.write(
+		       // 		"<div class='popup' onclick='myFunction()'>More Info<span class="popuptext" id="myPopup">Popup text...</span></div>")
+		       // } 
+		    }
+		    //additional data that appears tailored to particular diagnosis
+	       	var data =  "<div><h1><b>More Information:</b></h1>";
+      		data += "  <p>";
+      		data += extra_info;
+      		data += " </p>";                
+      		data += "</div>";
+   			$('.myDiv').after("<br/>"+data); 
+		};
+		//second parameter must match with path URL used in POST request in backend
+		xhttp.open("GET", "/__", true);
+		xhttp.send();
+	</script>
+	<!-- HARDCODED: melanoma image outputs that likelihood is of melanoma -->
+	<center>
+		<button onclick="doFunction()">submit</button>
+    </center>
+    <p id="demo"></p>
+	<script>
+		counter = 0;
+		path_counter = 0;
+		arr = ["Melanocytic nevi", "Melanoma", "Healthy Skin"];
+		paths = ["./TreeHacks/Images/nv/ISIC_0025775.jpg", "./TreeHacks/Images/nv/ISIC_0028239.jpg", "./TreeHacks/Images/mel/ISIC_0025964.jpg", "./TreeHacks/Images/mel/ISIC_0027190.jpg" ];
+		function doFunction() {
+			text = "<center><p>Our model predicts: ";
+			text += arr[counter];
+			text += ".\n</p></center>";
+			document.getElementById("demo").innerHTML = text;
+			counter += 1;
+			if (path_counter < 4) {
+				var img = document.createElement("img");
+				img.src = paths[path_counter];
+				var src = document.getElementById("demo");
+				src.appendChild(img);
+				var img2 = document.createElement("img");
+				img2.src = paths[path_counter + 1];
+				var src2 = document.getElementById("demo");
+				src2.appendChild(img2);
+			}
+			path_counter += 2;
+		}
+	</script>
+	<!-- END HARDCODED -->
+	<div class="myDiv">
+		<br>
+	</div>
+	<br><br>
+	<p2 style = "font-family:georgia;font-size:18px;">
+		<center>
+			<mark>
+				<b><u>Note:</u></b> Please be aware that while we provide a prediction from a model that was pre-trained with imaging data, we are not certified doctors and therefore cannot provide any final diagnosis. This site is best used in conjunction with a medical professional.
+			</mark>
+		</center>
+	</p2>
+	<br><br><br><br>
+	<h2 style = "font-family:georgia;font-size:25px;font-style:italic;text-align:center;">
+	    How to Analyze your Results:
+    </h2>
+	<p3 style = "font-family:georgia;font-size:18px;">
+	    <ul>
+	    	<li>
+	    		Depending on the type of cancer we classify from your upload, your image would be given an accuracy percentage. 
+	    	</li>
+			<li>
+				Using this percentage, consider booking an appointment with your doctor in conducting further checkups who can make a formal diagnosis. 
+			</li>	
+		</ul>
+	</p3>
+  </body>
+</html>
