@@ -1,1 +1,1 @@
-# skin-scanner
+# skin-scanner-home
